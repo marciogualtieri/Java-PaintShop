@@ -16,7 +16,7 @@ public class PaintShopTest {
 
     @Before
     public void before() throws Exception {
-        paintShop = new PaintShop();
+        paintShop = PaintShop.create();
     }
 
     @Test

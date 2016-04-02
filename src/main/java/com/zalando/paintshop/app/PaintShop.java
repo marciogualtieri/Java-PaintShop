@@ -6,8 +6,8 @@ import com.zalando.paintshop.exceptions.InputIteratorException;
 import com.zalando.paintshop.exceptions.InputParserException;
 import com.zalando.paintshop.formatters.OutputFormatter;
 import com.zalando.paintshop.formatters.SimpleOutputFormatter;
-import com.zalando.paintshop.iterators.FileInputIterator;
 import com.zalando.paintshop.iterators.InputIterator;
+import com.zalando.paintshop.iterators.PlainTextFileInputIterator;
 import com.zalando.paintshop.parsers.InputParser;
 import com.zalando.paintshop.parsers.PlainTextInputParser;
 import com.zalando.paintshop.processors.TestCaseProcessor;
@@ -28,15 +28,22 @@ public class PaintShop {
     private final TestCaseProcessor testCaseProcessor;
     private final OutputFormatter outputFormatter;
 
-    public PaintShop() {
-        inputParser = PlainTextInputParser.create();
-        testCaseProcessor = TestCaseProcessor.create();
-        outputFormatter = SimpleOutputFormatter.create();
+    private PaintShop(InputParser inputParser, TestCaseProcessor testCaseProcessor,
+                      OutputFormatter outputFormatter) {
+        this.inputParser = inputParser;
+        this.testCaseProcessor = testCaseProcessor;
+        this.outputFormatter = outputFormatter;
+    }
+
+    public static PaintShop create() {
+        return new PaintShop(PlainTextInputParser.create(),
+                TestCaseProcessor.create(),
+                SimpleOutputFormatter.create());
     }
 
     public List<String> execute(String fileNameAndPath) throws
             InputParserException, InputIteratorException {
-        InputIterator inputIterator = FileInputIterator.createFromFileName(fileNameAndPath);
+        InputIterator inputIterator = PlainTextFileInputIterator.createFromFileName(fileNameAndPath);
         TestCase[] testCases = inputParser.parse(inputIterator);
         long startTime = System.currentTimeMillis();
         BitSet[] batchesArray = testCaseProcessor.process(testCases);
@@ -47,12 +54,12 @@ public class PaintShop {
 
     public static void main(String[] args) {
         try {
-            PaintShopCliArguments paintShopCliArguments = parseCliArguments(args);
-            String inputFileNameAndPath = paintShopCliArguments.getInputFileNameAndPath();
-            PaintShop paintShop = new PaintShop();
+            CliArguments cliArguments = parseCliArguments(args);
+            String inputFileNameAndPath = cliArguments.getInputFileNameAndPath();
+            PaintShop paintShop = PaintShop.create();
             List<String> outputs = paintShop.execute(inputFileNameAndPath);
-            if (isOutputFileProvided(paintShopCliArguments))
-                outputToFile(outputs, paintShopCliArguments.getOutputFileNameAndPath());
+            if (isOutputFileProvided(cliArguments))
+                outputToFile(outputs, cliArguments.getOutputFileNameAndPath());
             else
                 outputToConsole(outputs);
         } catch (Exception e) {
@@ -60,18 +67,18 @@ public class PaintShop {
         }
     }
 
-    private static PaintShopCliArguments parseCliArguments(String[] args) throws Exception {
-        PaintShopCliArguments paintShopCliArguments = new PaintShopCliArguments();
-        JCommander jCommander = new JCommander(paintShopCliArguments, args);
-        if (paintShopCliArguments.getHelp()) {
+    private static CliArguments parseCliArguments(String[] args) throws Exception {
+        CliArguments cliArguments = new CliArguments();
+        JCommander jCommander = new JCommander(cliArguments, args);
+        if (cliArguments.getHelp()) {
             jCommander.usage();
-            throw new Exception("");
+            throw new Exception("Help Invoked.");
         }
-        return paintShopCliArguments;
+        return cliArguments;
     }
 
-    private static boolean isOutputFileProvided(PaintShopCliArguments paintShopCliArguments) {
-        return paintShopCliArguments.getOutputFileNameAndPath() != null;
+    private static boolean isOutputFileProvided(CliArguments cliArguments) {
+        return cliArguments.getOutputFileNameAndPath() != null;
     }
 
     private static void outputToConsole(List<String> outputs) {

@@ -2,7 +2,7 @@ package com.zalando.paintshop.parsers;
 
 import com.zalando.paintshop.TestCase;
 import com.zalando.paintshop.exceptions.InputParserException;
-import com.zalando.paintshop.iterators.FileInputIterator;
+import com.zalando.paintshop.iterators.PlainTextFileInputIterator;
 import com.zalando.paintshop.iterators.InputIterator;
 import com.zalando.paintshop.constants.ErrorMessages;
 import com.zalando.utils.TestHelper;
@@ -28,7 +28,7 @@ public class PlainTextInputParserTest {
 
     @Test
     public void whenParseFile_thenOK() throws Exception {
-        InputIterator inputIterator = FileInputIterator.createFromFileName(TestHelper.SUCCESS_FROM_SPEC_INPUT_FILE);
+        InputIterator inputIterator = PlainTextFileInputIterator.createFromFileName(TestHelper.SUCCESS_FROM_SPEC_INPUT_FILE);
         TestCase[] testCases = plainTextInputParser.parse(inputIterator);
         assertThat(testCases, equalTo(TestHelper.TEST_CASES));
     }
@@ -36,7 +36,7 @@ public class PlainTextInputParserTest {
     @Test
     public void whenParseFileAndLessTestCasesThanExpected_thenException() throws Exception {
         setUpInputParserException(ErrorMessages.PARSE_UNEXPECTED_EOF_ERR_MSG);
-        InputIterator inputIterator = FileInputIterator.createFromFileName(TestHelper.UNEXPECTED_EOF_INPUT_FILE);
+        InputIterator inputIterator = PlainTextFileInputIterator.createFromFileName(TestHelper.UNEXPECTED_EOF_INPUT_FILE);
         plainTextInputParser.parse(inputIterator);
     }
 
@@ -44,7 +44,7 @@ public class PlainTextInputParserTest {
     public void whenParseFileAndNumberTestCasesNotANumber_thenException() throws Exception {
         setUpInputParserException(TestHelper.NUMBER_TEST_CASES_NOT_A_NUMBER_MESSAGE);
         InputIterator inputIterator =
-                FileInputIterator.createFromFileName(TestHelper.NUMBER_TEST_CASES_NOT_A_NUMBER_INPUT_FILE);
+                PlainTextFileInputIterator.createFromFileName(TestHelper.NUMBER_TEST_CASES_NOT_A_NUMBER_INPUT_FILE);
         plainTextInputParser.parse(inputIterator);
     }
 
@@ -52,7 +52,7 @@ public class PlainTextInputParserTest {
     public void whenParseFileAndNumberColorsNotANumber_thenException() throws Exception {
         setUpInputParserException(TestHelper.NUMBER_COLORS_NOT_A_NUMBER_MESSAGE);
         InputIterator inputIterator =
-                FileInputIterator.createFromFileName(TestHelper.NUMBER_COLORS_NOT_A_NUMBER_INPUT_FILE);
+                PlainTextFileInputIterator.createFromFileName(TestHelper.NUMBER_COLORS_NOT_A_NUMBER_INPUT_FILE);
         plainTextInputParser.parse(inputIterator);
     }
 
@@ -60,7 +60,7 @@ public class PlainTextInputParserTest {
     public void whenParseFileAndNumberCustomersNotANumber_thenException() throws Exception {
         setUpInputParserException(TestHelper.NUMBER_CUSTOMERS_NOT_A_NUMBER_MESSAGE);
         InputIterator inputIterator =
-                FileInputIterator.createFromFileName(TestHelper.NUMBER_CUSTOMERS_NOT_A_NUMBER_INPUT_FILE);
+                PlainTextFileInputIterator.createFromFileName(TestHelper.NUMBER_CUSTOMERS_NOT_A_NUMBER_INPUT_FILE);
         plainTextInputParser.parse(inputIterator);
     }
 
@@ -68,7 +68,7 @@ public class PlainTextInputParserTest {
     public void whenParseFileAndNotANumberInCustomer_thenException() throws Exception {
         setUpInputParserException(TestHelper.CUSTOMER_PAIRS_NOT_NUMBERS_MESSAGE);
         InputIterator inputIterator =
-                FileInputIterator.createFromFileName(TestHelper.CUSTOMER_PAIRS_NOT_NUMBERS);
+                PlainTextFileInputIterator.createFromFileName(TestHelper.CUSTOMER_PAIRS_NOT_NUMBERS);
         plainTextInputParser.parse(inputIterator);
     }
 
@@ -76,7 +76,7 @@ public class PlainTextInputParserTest {
     public void whenParseFileAndInvalidNumberOfPairs_thenException() throws Exception {
         setUpInputParserException(TestHelper.INCORRECT_NUMBER_OF_PAIRS_MESSAGE);
         InputIterator inputIterator =
-                FileInputIterator.createFromFileName(TestHelper.INCORRECT_NUMBER_OF_PAIRS_INPUT_FILE);
+                PlainTextFileInputIterator.createFromFileName(TestHelper.INCORRECT_NUMBER_OF_PAIRS_INPUT_FILE);
         plainTextInputParser.parse(inputIterator);
     }
 
