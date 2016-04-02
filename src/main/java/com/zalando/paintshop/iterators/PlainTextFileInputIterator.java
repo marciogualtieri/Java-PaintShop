@@ -12,18 +12,18 @@ import java.io.IOException;
 /**
  * File line iterator capable of holding the current line number.
  */
-public class FileInputIterator implements InputIterator {
+public class PlainTextFileInputIterator implements InputIterator {
     private final LineIterator lineIterator;
     private final MutableInt lineNumber;
 
-    private FileInputIterator(File file) throws IOException {
+    private PlainTextFileInputIterator(File file) throws IOException {
         lineIterator = FileUtils.lineIterator(file);
         lineNumber = new MutableInt(0);
     }
 
     public static InputIterator createFromFileName(String fileNameAndPath) throws InputIteratorException {
         try {
-            return new FileInputIterator(new File(fileNameAndPath));
+            return new PlainTextFileInputIterator(new File(fileNameAndPath));
         } catch (IOException e) {
             String message = String.format(ErrorMessages.PARSE_FILE_ERR_MSG_FORMAT, fileNameAndPath);
             throw new InputIteratorException(message, e);

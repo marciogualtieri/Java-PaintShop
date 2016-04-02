@@ -14,7 +14,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
-public class FileInputIteratorTest {
+public class PlainTextFileInputIteratorTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -23,12 +23,12 @@ public class FileInputIteratorTest {
     public void whenCreateIteratorForFileAndFileDoesNotExist_thenException() throws Exception {
         expectedException.expect(InputIteratorException.class);
         expectedException.expectMessage(TestHelper.INPUT_FILE_DOES_NOT_EXIST_MESSAGE);
-        FileInputIterator.createFromFileName(TestHelper.NON_EXISTENT_FILE);
+        PlainTextFileInputIterator.createFromFileName(TestHelper.NON_EXISTENT_FILE);
     }
 
     @Test
     public void whenCreateFileIterator_thenOK() throws Exception {
-        InputIterator inputIterator = FileInputIterator.createFromFileName(TestHelper.SUCCESS_FROM_SPEC_INPUT_FILE);
+        InputIterator inputIterator = PlainTextFileInputIterator.createFromFileName(TestHelper.SUCCESS_FROM_SPEC_INPUT_FILE);
         List<String> lines = readAllLinesFromIterator(inputIterator);
         List<String> expectedLines = FileUtils.readLines(new File(TestHelper.SUCCESS_FROM_SPEC_INPUT_FILE));
         assertThat(lines, contains(expectedLines.toArray()));
