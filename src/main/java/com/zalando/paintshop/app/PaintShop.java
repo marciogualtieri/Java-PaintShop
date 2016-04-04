@@ -42,7 +42,7 @@ public class PaintShop {
     }
 
     public List<String> execute(String fileNameAndPath) throws
-            InputParserException, InputIteratorException {
+            InputParserException, InputIteratorException, IOException {
         InputIterator inputIterator = PlainTextFileInputIterator.createFromFileName(fileNameAndPath);
         TestCase[] testCases = inputParser.parse(inputIterator);
         long startTime = System.currentTimeMillis();
@@ -54,12 +54,12 @@ public class PaintShop {
 
     public static void main(String[] args) {
         try {
-            CliArguments cliArguments = parseCliArguments(args);
-            String inputFileNameAndPath = cliArguments.getInputFileNameAndPath();
+            CliArgsConfig cliArgsConfig = buildCliArgsConfig(args);
+            String inputFileNameAndPath = cliArgsConfig.getInputFileNameAndPath();
             PaintShop paintShop = PaintShop.create();
             List<String> outputs = paintShop.execute(inputFileNameAndPath);
-            if (isOutputFileProvided(cliArguments))
-                outputToFile(outputs, cliArguments.getOutputFileNameAndPath());
+            if (isOutputFileProvided(cliArgsConfig))
+                outputToFile(outputs, cliArgsConfig.getOutputFileNameAndPath());
             else
                 outputToConsole(outputs);
         } catch (Exception e) {
@@ -67,18 +67,18 @@ public class PaintShop {
         }
     }
 
-    private static CliArguments parseCliArguments(String[] args) throws Exception {
-        CliArguments cliArguments = new CliArguments();
-        JCommander jCommander = new JCommander(cliArguments, args);
-        if (cliArguments.getHelp()) {
+    private static CliArgsConfig buildCliArgsConfig(String[] args) throws Exception {
+        CliArgsConfig cliArgsConfig = new CliArgsConfig();
+        JCommander jCommander = new JCommander(cliArgsConfig, args);
+        if (cliArgsConfig.getHelp()) {
             jCommander.usage();
             throw new Exception("Help Invoked.");
         }
-        return cliArguments;
+        return cliArgsConfig;
     }
 
-    private static boolean isOutputFileProvided(CliArguments cliArguments) {
-        return cliArguments.getOutputFileNameAndPath() != null;
+    private static boolean isOutputFileProvided(CliArgsConfig cliArgsConfig) {
+        return cliArgsConfig.getOutputFileNameAndPath() != null;
     }
 
     private static void outputToConsole(List<String> outputs) {

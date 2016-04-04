@@ -1,15 +1,16 @@
 package com.zalando.paintshop.parsers;
 
 import com.zalando.paintshop.Customer;
-import com.zalando.paintshop.constants.ErrorMessages;
 import com.zalando.paintshop.TestCase;
 import com.zalando.paintshop.constants.FieldNames;
 import com.zalando.paintshop.enums.Finish;
+import com.zalando.paintshop.exceptions.InputIteratorException;
 import com.zalando.paintshop.exceptions.InputParserException;
 import com.zalando.paintshop.iterators.InputIterator;
 
 import java.util.Arrays;
-import java.util.NoSuchElementException;
+
+import static com.zalando.paintshop.constants.ErrorMessages.*;
 
 /**
  * Parses plain text input into test cases.
@@ -30,7 +31,7 @@ public class PlainTextInputParser implements InputParser {
      * @return An array of test cases.
      * @throws InputParserException In case file doesn't comply to syntax.
      */
-    public TestCase[] parse(InputIterator lines) throws InputParserException {
+    public TestCase[] parse(InputIterator lines) throws InputParserException, InputIteratorException {
         TestCase[] testCases;
         int numTestCases = parseIntField(lines, FieldNames.NUMBER_TEST_CASES);
         testCases = new TestCase[numTestCases];
@@ -44,7 +45,7 @@ public class PlainTextInputParser implements InputParser {
     }
 
     private Customer[] parseCustomers(int numCustomers, int numColors, InputIterator lines)
-            throws InputParserException {
+            throws InputParserException, InputIteratorException {
         Customer[] customers = new Customer[numCustomers];
         for (int i = 0; i < numCustomers; i++) {
             Customer customer = parseCustomer(numColors, lines);
@@ -54,15 +55,16 @@ public class PlainTextInputParser implements InputParser {
     }
 
     private Customer parseCustomer(int numColors, InputIterator lines)
-            throws InputParserException {
+            throws InputParserException, InputIteratorException {
         Customer customer = new Customer(numColors);
-        int[] pairs = parseCustomerPairs(lines);
+        String lineValue = lines.readLine();
         int lineNum = lines.getLineNumber();
+        int[] pairs = parseCustomerPairs(lineValue, lineNum);
         for (int i = 1; i < pairs.length; i += 2) {
             int color = pairs[i];
             int finish = pairs[i + 1];
-            validateColorCode(color, numColors, lineNum);
-            validateFinishCode(finish, lineNum);
+            validateColorCode(color, numColors, lineValue, lineNum);
+            validateFinishCode(customer, finish, lineValue, lineNum);
             updateCustomer(customer, color, finish);
         }
         return customer;
@@ -74,41 +76,36 @@ public class PlainTextInputParser implements InputParser {
         else customer.setMatte(colorCode - 1);
     }
 
-    private void validateColorCode(int colorCode, int numColors, int lineNum) throws InputParserException {
-        if (colorCode < 1 || colorCode > numColors)
-            throw new InputParserException(String.format(ErrorMessages.PARSE_COLOR_CODE_RANGE_ERR_MSG_FORMAT,
-                    colorCode, numColors, lineNum));
-    }
-
-    private void validateFinishCode(int finishCode, int lineNum) throws InputParserException {
-        if (!Finish.isValidFinishCode(finishCode))
-            throw new InputParserException(String.format(ErrorMessages.PARSE_FINISH_CODE_RANGE_ERR_MSG_FORMAT,
-                    finishCode, lineNum));
-    }
-
-    private int[] parseCustomerPairs(InputIterator lines)
+    private void validateColorCode(int colorCode, int numColors, String lineValue, int lineNum)
             throws InputParserException {
-        String line = null;
-        int[] pairs;
-        int lineNum = 0;
-        try {
-            line = lines.readLine();
-            lineNum = lines.getLineNumber();
-            pairs = convertStringToIntArray(line, "\\s");
-        } catch (NumberFormatException e) {
-            throw new InputParserException(
-                    String.format(ErrorMessages.PARSE_CUSTOMER_PAIRS_ERR_MSG_FORMAT, line, lineNum), e);
-        } catch (NoSuchElementException e) {
-            throw new InputParserException(String.format(ErrorMessages.PARSE_UNEXPECTED_EOF_ERR_MSG), e);
+        if (colorCode < 1 || colorCode > numColors)
+            throw new InputParserException(invalidColorCodeErrorMessage(numColors, lineValue, lineNum));
+    }
+
+    private void validateFinishCode(Customer customer, int finishCode, String lineValue, int lineNum)
+            throws InputParserException {
+        if (Finish.isMatte(finishCode) && customer.hasMatte()) {
+            throw new InputParserException(moreThanOneMatteErrorMessage(lineValue, lineNum));
         }
-        validateCustomerPairs(pairs, line, lineNum);
+        if (!Finish.isValidFinishCode(finishCode))
+            throw new InputParserException(invalidFinishCodeErrorMessage(lineValue, lineNum));
+    }
+
+    private int[] parseCustomerPairs(String lineValue, int lineNum)
+            throws InputParserException, InputIteratorException {
+        int[] pairs;
+        try {
+            pairs = convertCustomerStringToIntArray(lineValue);
+        } catch (NumberFormatException e) {
+            throw new InputParserException(nonNumericPairsErrorMessage(lineValue, lineNum), e);
+        }
+        validateCustomerPairs(pairs, lineValue, lineNum);
         return pairs;
     }
 
-    private void validateCustomerPairs(int[] pairs, String line, int lineNum) throws InputParserException {
+    private void validateCustomerPairs(int[] pairs, String lineValue, int lineNum) throws InputParserException {
         if (pairs == null || !isValidNumCustomerPairs(pairs))
-            throw new InputParserException(String.format(
-                    ErrorMessages.PARSE_NUMBER_PAIRS_ERR_MSG_FORMAT, pairs[0], lineNum, line));
+            throw new InputParserException(invalidNumberPairsErrorMessage(lineValue, lineNum));
     }
 
     private boolean isValidNumCustomerPairs(int[] pairs) {
@@ -116,25 +113,21 @@ public class PlainTextInputParser implements InputParser {
         return (pairs.length - 1) / 2 == numPairs && (pairs.length - 1) % 2 == 0;
     }
 
-    private int[] convertStringToIntArray(String string, String delimiter) {
-        return Arrays.stream(string.split(delimiter))
+    private int[] convertCustomerStringToIntArray(String string) {
+        return Arrays.stream(string.split("\\s"))
                 .map(String::trim)
                 .mapToInt(Integer::parseInt)
                 .toArray();
     }
 
-    private int parseIntField(InputIterator lines, String fieldName) throws InputParserException {
-        int lineNum = 0;
-        String value = null;
+    private int parseIntField(InputIterator lines, String fieldName)
+            throws InputParserException, InputIteratorException {
+        String lineValue = lines.readLine();
+        int lineNum = lines.getLineNumber();
         try {
-            value = lines.readLine();
-            lineNum = lines.getLineNumber();
-            return Integer.parseInt(value);
+            return Integer.parseInt(lineValue);
         } catch (NumberFormatException e) {
-            throw new InputParserException(
-                    String.format(ErrorMessages.PARSE_NUMBER_ERR_MSG_FORMAT, fieldName, value, lineNum), e);
-        } catch (NoSuchElementException e) {
-            throw new InputParserException(ErrorMessages.PARSE_UNEXPECTED_EOF_ERR_MSG);
+            throw new InputParserException(notNumberErrorMessage(fieldName, lineValue, lineNum), e);
         }
     }
 }

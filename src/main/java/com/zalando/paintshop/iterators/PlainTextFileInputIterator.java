@@ -8,6 +8,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 /**
  * File line iterator capable of holding the current line number.
@@ -25,14 +26,17 @@ public class PlainTextFileInputIterator implements InputIterator {
         try {
             return new PlainTextFileInputIterator(new File(fileNameAndPath));
         } catch (IOException e) {
-            String message = String.format(ErrorMessages.PARSE_FILE_ERR_MSG_FORMAT, fileNameAndPath);
-            throw new InputIteratorException(message, e);
+            throw new InputIteratorException(e);
         }
     }
 
-    public String readLine() {
-        lineNumber.increment();
-        return lineIterator.next();
+    public String readLine() throws InputIteratorException {
+        try {
+            lineNumber.increment();
+            return lineIterator.next();
+        }catch(NoSuchElementException e) {
+            throw new InputIteratorException(ErrorMessages.UNEXPECTED_EOF_ERR_MSG, e);
+        }
     }
 
     public boolean hasLines() {

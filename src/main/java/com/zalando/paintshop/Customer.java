@@ -12,8 +12,8 @@ public class Customer {
     private final BitSet glossies;
     private Integer matte = null;
 
-    public Customer(int colors) {
-        glossies = new BitSet(colors);
+    public Customer(int numColors) {
+        glossies = new BitSet(numColors);
     }
 
     /**

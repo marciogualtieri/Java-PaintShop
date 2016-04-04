@@ -2,9 +2,8 @@ package com.zalando.paintshop.parsers;
 
 import com.zalando.paintshop.TestCase;
 import com.zalando.paintshop.exceptions.InputParserException;
-import com.zalando.paintshop.iterators.PlainTextFileInputIterator;
 import com.zalando.paintshop.iterators.InputIterator;
-import com.zalando.paintshop.constants.ErrorMessages;
+import com.zalando.paintshop.iterators.PlainTextFileInputIterator;
 import com.zalando.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Rule;
@@ -31,13 +30,6 @@ public class PlainTextInputParserTest {
         InputIterator inputIterator = PlainTextFileInputIterator.createFromFileName(TestHelper.SUCCESS_FROM_SPEC_INPUT_FILE);
         TestCase[] testCases = plainTextInputParser.parse(inputIterator);
         assertThat(testCases, equalTo(TestHelper.TEST_CASES));
-    }
-
-    @Test
-    public void whenParseFileAndLessTestCasesThanExpected_thenException() throws Exception {
-        setUpInputParserException(ErrorMessages.PARSE_UNEXPECTED_EOF_ERR_MSG);
-        InputIterator inputIterator = PlainTextFileInputIterator.createFromFileName(TestHelper.UNEXPECTED_EOF_INPUT_FILE);
-        plainTextInputParser.parse(inputIterator);
     }
 
     @Test
@@ -77,6 +69,30 @@ public class PlainTextInputParserTest {
         setUpInputParserException(TestHelper.INCORRECT_NUMBER_OF_PAIRS_MESSAGE);
         InputIterator inputIterator =
                 PlainTextFileInputIterator.createFromFileName(TestHelper.INCORRECT_NUMBER_OF_PAIRS_INPUT_FILE);
+        plainTextInputParser.parse(inputIterator);
+    }
+
+    @Test
+    public void whenParseFileAndCustomerWithMoreThanOneMatteColor_thenException() throws Exception {
+        setUpInputParserException(TestHelper.CUSTOMER_WITH_MORE_THAN_ONE_MATTE_COLOR_MESSAGE);
+        InputIterator inputIterator = PlainTextFileInputIterator.createFromFileName(
+                        TestHelper.MORE_THAN_ONE_MATTE_COLOR_INPUT_FILE);
+        plainTextInputParser.parse(inputIterator);
+    }
+
+    @Test
+    public void whenParseFileAndCustomerWithInvalidColor_thenException() throws Exception {
+        setUpInputParserException(TestHelper.INVALID_COLOR_INPUT_MESSAGE);
+        InputIterator inputIterator = PlainTextFileInputIterator.createFromFileName(
+                TestHelper.INVALID_COLOR_INPUT_FILE);
+        plainTextInputParser.parse(inputIterator);
+    }
+
+    @Test
+    public void whenParseFileAndCustomerWithInvalidFinish_thenException() throws Exception {
+        setUpInputParserException(TestHelper.INVALID_FINISH_INPUT_MESSAGE);
+        InputIterator inputIterator = PlainTextFileInputIterator.createFromFileName(
+                TestHelper.INVALID_FINISH_INPUT_FILE);
         plainTextInputParser.parse(inputIterator);
     }
 

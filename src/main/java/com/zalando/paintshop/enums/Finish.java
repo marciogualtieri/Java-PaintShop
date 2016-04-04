@@ -9,7 +9,7 @@ public enum Finish {
         this.code = code;
     }
 
-    public static Finish getFinishByCode(int code){
+    private static Finish getFinishByCode(int code){
         for(Finish value : Finish.values()){
             if(value.code == code) return value;
         }
@@ -24,5 +24,10 @@ public enum Finish {
     public static boolean isGlossy(int code) {
         Finish finish = getFinishByCode(code);
         return finish == Finish.GLOSSY;
+    }
+
+    public static boolean isMatte(int code) {
+        Finish finish = getFinishByCode(code);
+        return finish == Finish.MATTE;
     }
 }

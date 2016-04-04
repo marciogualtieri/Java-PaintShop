@@ -213,10 +213,12 @@ Sometimes I got complaints about "not having comments in my code". I try to make
 
 To be able to check performance, we need to create the "large data set" and "small data set" mentioned in the specification.
 
-For that a Python script is available under ```scripts/input-generator```. The usage is the following:
+For that a Python script is available under ```scripts/input-generator```. For details refer to the source code. Note that this Python code has unit tests.
+
+The usage is the following:
 
     ./input-generator.py <number of test cases> <number of colors> <number of customers> <max number of pairs> --output-file <name of the output file>
- 
+
 Examples:
 
     ./input-generator.py 100 10 10 2 --output-file ../../small_dataset.txt
@@ -224,7 +226,7 @@ Examples:
 
 The colors and finishes are chosen at random. Every time you run it, you will get a different file.
 
-For reference, the ones used in the performance tests are available under the following directory:
+For reference, the ones used for the performance tests are available under the following directory:
 
     src/test/resources/input/performance
 

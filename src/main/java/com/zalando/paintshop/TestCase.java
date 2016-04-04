@@ -5,7 +5,6 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.util.Arrays;
-import java.util.BitSet;
 
 /**
  * A test case contains the number of numColors, the number of customers and customer
@@ -15,7 +14,6 @@ import java.util.BitSet;
 public class TestCase {
     private final int numColors;
     private final Customer[] customers;
-    private BitSet batches;
 
     public TestCase(int numColors, Customer[] customers) {
         this.numColors = numColors;

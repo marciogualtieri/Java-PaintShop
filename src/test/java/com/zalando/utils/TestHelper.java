@@ -1,13 +1,14 @@
 package com.zalando.utils;
 
 import com.zalando.paintshop.Customer;
-import com.zalando.paintshop.constants.ErrorMessages;
 import com.zalando.paintshop.TestCase;
 import com.zalando.paintshop.constants.FieldNames;
 
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
+
+import static com.zalando.paintshop.constants.ErrorMessages.*;
 
 public class TestHelper {
 
@@ -31,6 +32,12 @@ public class TestHelper {
             "src/test/resources/inputs/customer_pairs_not_numbers.txt";
     public static final String INCORRECT_NUMBER_OF_PAIRS_INPUT_FILE =
             "src/test/resources/inputs/incorrect_number_of_pairs.txt";
+    public static final String MORE_THAN_ONE_MATTE_COLOR_INPUT_FILE =
+            "src/test/resources/inputs/customer_with_more_than_one_matte_color.txt";
+    public static final String INVALID_COLOR_INPUT_FILE =
+            "src/test/resources/inputs/invalid_color_code.txt";
+    public static final String INVALID_FINISH_INPUT_FILE =
+            "src/test/resources/inputs/invalid_finish_code.txt";
 
     public static final TestCase[] TEST_CASES = createTestCases();
 
@@ -43,22 +50,19 @@ public class TestHelper {
             Arrays.asList("Case #1: 0 0 0 0 0 0 0 0", "Case #2: 0 0 0 0 0 0 1 0", "Case #3: IMPOSSIBLE");
 
     public static final String INPUT_FILE_DOES_NOT_EXIST_MESSAGE =
-            String.format(ErrorMessages.PARSE_FILE_ERR_MSG_FORMAT, NON_EXISTENT_FILE);
-
+            String.format("File '%s' does not exist", NON_EXISTENT_FILE);
     public static final String NUMBER_TEST_CASES_NOT_A_NUMBER_MESSAGE =
-            String.format(ErrorMessages.PARSE_NUMBER_ERR_MSG_FORMAT, FieldNames.NUMBER_TEST_CASES, "X", 1);
-
+            notNumberErrorMessage(FieldNames.NUMBER_TEST_CASES, "X", 1);
     public static final String NUMBER_COLORS_NOT_A_NUMBER_MESSAGE =
-            String.format(ErrorMessages.PARSE_NUMBER_ERR_MSG_FORMAT, FieldNames.NUMBER_COLORS, "X", 2);
-
+            notNumberErrorMessage(FieldNames.NUMBER_COLORS, "X", 2);
     public static final String NUMBER_CUSTOMERS_NOT_A_NUMBER_MESSAGE =
-            String.format(ErrorMessages.PARSE_NUMBER_ERR_MSG_FORMAT, FieldNames.NUMBER_CUSTOMERS, "X", 3);
-
-    public static final String CUSTOMER_PAIRS_NOT_NUMBERS_MESSAGE =
-            String.format(ErrorMessages.PARSE_CUSTOMER_PAIRS_ERR_MSG_FORMAT, "2 1 0 X 0", 5);
-
-    public static final String INCORRECT_NUMBER_OF_PAIRS_MESSAGE =
-            String.format(ErrorMessages.PARSE_NUMBER_PAIRS_ERR_MSG_FORMAT, 3, 5, "3 1 0 2 0");
+            notNumberErrorMessage(FieldNames.NUMBER_CUSTOMERS, "X", 3);
+    public static final String CUSTOMER_PAIRS_NOT_NUMBERS_MESSAGE = nonNumericPairsErrorMessage("2 1 0 X 0", 5);
+    public static final String INCORRECT_NUMBER_OF_PAIRS_MESSAGE = invalidNumberPairsErrorMessage("3 1 0 2 0", 5);
+    public static final String CUSTOMER_WITH_MORE_THAN_ONE_MATTE_COLOR_MESSAGE =
+            moreThanOneMatteErrorMessage("2 1 1 2 1", 5);
+    public static final String INVALID_COLOR_INPUT_MESSAGE = invalidColorCodeErrorMessage(5, "1 6 1", 4);
+    public static final String INVALID_FINISH_INPUT_MESSAGE = invalidFinishCodeErrorMessage("1 1 3", 4);
 
     private static BitSet createSecondColorOnlyMatteBatches() {
         BitSet set = new BitSet(NUMBER_COLORS);

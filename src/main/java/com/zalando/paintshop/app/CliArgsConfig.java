@@ -5,7 +5,7 @@ import com.beust.jcommander.Parameter;
 /**
  * Command line arguments are configured here.
  */
-class CliArguments {
+class CliArgsConfig {
 
     @Parameter(names = {"--input-file", "-i"},
             description = "Name of the input file containing test cases.",
