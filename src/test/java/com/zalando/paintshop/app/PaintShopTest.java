@@ -1,6 +1,5 @@
 package com.zalando.paintshop.app;
 
-import com.google.common.base.Joiner;
 import com.zalando.utils.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +27,6 @@ public class PaintShopTest {
     @Test
     public void whenExecutePaintShop_thenOk() throws Exception {
         List<String> outputs = paintShop.execute(TestHelper.SUCCESS_INPUT_FILE);
-        System.out.println(Joiner.on("\n").join(outputs));
         assertThat(outputs, contains(TestHelper.OUTPUTS.toArray()));
     }
 } 

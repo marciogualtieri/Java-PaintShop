@@ -6,34 +6,34 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-public class SimpleOutputFormatter implements OutputFormatter {
+public class PlainTextOutputFormatter implements OutputFormatter {
     private static final String OUTPUT_FORMAT = "Case #%d: %s";
 
-    private SimpleOutputFormatter() {
+    private PlainTextOutputFormatter() {
     }
 
     public static OutputFormatter create() {
-        return new SimpleOutputFormatter();
+        return new PlainTextOutputFormatter();
     }
 
     /**
-     * Formats test case batches into output lines.
+     * Formats test case solutions into output lines.
      *
      * @param testCases    test cases
-     * @param batchesArray correspondent batches solution to test cases
+     * @param solutions correspondent solutions to test cases
      * @return formatted output batches.
      */
-    public List<String> format(TestCase[] testCases, BitSet[] batchesArray) {
+    public List<String> format(TestCase[] testCases, BitSet[] solutions) {
         List<String> outputs = new ArrayList<>();
-        for (int i = 0; i < batchesArray.length; i++) {
-            outputs.add(formatTestCaseBatches(i + 1, batchesArray[i], testCases[i]));
+        for (int i = 0; i < solutions.length; i++) {
+            outputs.add(formatTestCaseSolutions(i + 1, solutions[i], testCases[i]));
         }
         return outputs;
     }
 
-    private String formatTestCaseBatches(int index, BitSet batches, TestCase testCase) {
-        if (batches != null) {
-            String batchesString = formatBitSet(batches, testCase.getNumColors());
+    private String formatTestCaseSolutions(int index, BitSet solution, TestCase testCase) {
+        if (solution != null) {
+            String batchesString = formatBitSet(solution, testCase.getNumColors());
             return String.format(OUTPUT_FORMAT, index, batchesString);
         } else
             return String.format(OUTPUT_FORMAT, index, "IMPOSSIBLE");

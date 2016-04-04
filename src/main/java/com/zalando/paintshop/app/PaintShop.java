@@ -5,7 +5,7 @@ import com.zalando.paintshop.TestCase;
 import com.zalando.paintshop.exceptions.InputIteratorException;
 import com.zalando.paintshop.exceptions.InputParserException;
 import com.zalando.paintshop.formatters.OutputFormatter;
-import com.zalando.paintshop.formatters.SimpleOutputFormatter;
+import com.zalando.paintshop.formatters.PlainTextOutputFormatter;
 import com.zalando.paintshop.iterators.InputIterator;
 import com.zalando.paintshop.iterators.PlainTextFileInputIterator;
 import com.zalando.paintshop.parsers.InputParser;
@@ -38,18 +38,23 @@ public class PaintShop {
     public static PaintShop create() {
         return new PaintShop(PlainTextInputParser.create(),
                 TestCaseProcessor.create(),
-                SimpleOutputFormatter.create());
+                PlainTextOutputFormatter.create());
     }
 
     public List<String> execute(String fileNameAndPath) throws
             InputParserException, InputIteratorException, IOException {
         InputIterator inputIterator = PlainTextFileInputIterator.createFromFileName(fileNameAndPath);
         TestCase[] testCases = inputParser.parse(inputIterator);
+        BitSet[] solutions = processTestCasesWithBenchmarking(testCases);
+        return outputFormatter.format(testCases, solutions);
+    }
+
+    public BitSet[] processTestCasesWithBenchmarking(TestCase[] testCases) {
         long startTime = System.currentTimeMillis();
-        BitSet[] batchesArray = testCaseProcessor.process(testCases);
+        BitSet[] solutions = testCaseProcessor.process(testCases);
         long endTime = System.currentTimeMillis();
         System.out.println(String.format(BENCHMARK_OUTPUT_FORMAT, (endTime - startTime)));
-        return outputFormatter.format(testCases, batchesArray);
+        return solutions;
     }
 
     public static void main(String[] args) {
