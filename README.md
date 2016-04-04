@@ -156,24 +156,16 @@ Could this application be simpler (less lines of code)? Yes. Would it be open-cl
 In order to achieve an open-closed design, the application has been broken into the following basic components:
 
 ![Alt text](http://g.gravizo.com/g?
-
 /**
  * @has 1 assignedTo 1 InputParser
  */
 interface InputIterator {}
-
 interface InputParser {}
-
 interface OutputFormatter {}
-
 class PlainTextFileInputIterator implements InputIterator {}
-
 class PlainTextInputParser implements InputParser {}
-
 class TestCaseProcessor {}
-
 class SimpleOutputFormatter implements OutputFormatter {}
-
 /**
  * @composed 1 Has 1 InputParser
  * @composed 1 Has 1 TestCaseProcessor
