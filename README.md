@@ -143,10 +143,10 @@ Could this application be simpler (less lines of code)? Yes. Would it be open-cl
 In order to achieve an open-closed design, the application has been broken into the following basic components:
 
 ![PaintShop Class Diagram](http://g.gravizo.com/g?
-/**
- * @has 1 assignedTo 1 InputParser
- */
 interface InputIterator {}
+/**
+ * @has 1 assignedTo 1 InputIterator
+ */
 interface InputParser {}
 interface OutputFormatter {}
 class PlainTextFileInputIterator implements InputIterator {}
