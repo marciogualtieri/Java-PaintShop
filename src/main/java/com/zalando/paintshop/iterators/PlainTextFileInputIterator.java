@@ -30,20 +30,16 @@ public class PlainTextFileInputIterator implements InputIterator {
         }
     }
 
-    public String readLine() throws InputIteratorException {
+    public InputIteratorLine readLine() throws InputIteratorException {
         try {
             lineNumber.increment();
-            return lineIterator.next();
-        }catch(NoSuchElementException e) {
+            return new InputIteratorLine(lineIterator.next(), lineNumber.intValue());
+        } catch (NoSuchElementException e) {
             throw new InputIteratorException(ErrorMessages.UNEXPECTED_EOF_ERR_MSG, e);
         }
     }
 
     public boolean hasLines() {
         return lineIterator.hasNext();
-    }
-
-    public int getLineNumber() {
-        return lineNumber.intValue();
     }
 }

@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,16 +40,28 @@ public class PlainTextFileInputIteratorTest {
     public void whenCreateFileIterator_thenOK() throws Exception {
         InputIterator inputIterator =
                 PlainTextFileInputIterator.createFromFileName(TestHelper.SUCCESS_FROM_SPEC_INPUT_FILE);
-        List<String> lines = readAllLinesFromIterator(inputIterator);
-        List<String> expectedLines = FileUtils.readLines(new File(TestHelper.SUCCESS_FROM_SPEC_INPUT_FILE));
+        List<InputIteratorLine> lines = readAllLinesFromIterator(inputIterator);
+        List<InputIteratorLine> expectedLines = readAllLinesFromFile(TestHelper.SUCCESS_FROM_SPEC_INPUT_FILE);
         assertThat(lines, contains(expectedLines.toArray()));
     }
 
-    private List<String> readAllLinesFromIterator(InputIterator inputIterator) throws InputIteratorException {
-        List<String> lines = new ArrayList<>();
+    private List<InputIteratorLine> readAllLinesFromIterator(InputIterator inputIterator) throws InputIteratorException {
+        List<InputIteratorLine> lines = new ArrayList<>();
         while(inputIterator.hasLines()) {
             lines.add(inputIterator.readLine());
         }
         return lines;
     }
+
+    private List<InputIteratorLine> readAllLinesFromFile(String fileNameAndPath) throws IOException {
+        List<InputIteratorLine> lines = new ArrayList<>();
+        List<String> lineValues =
+                FileUtils.readLines(new File(fileNameAndPath));
+        int lineNumber = 1;
+        for(String value : lineValues) {
+            lines.add(new InputIteratorLine(value, lineNumber++));
+        }
+        return lines;
+    }
+
 }

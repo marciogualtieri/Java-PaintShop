@@ -9,7 +9,7 @@
 ### [PERFORMANCE](#performance)
 #### [RANDOM INPUT GENERATOR](#random-input-generator)
 #### [PERFORMANCE RESULTS](#performance-results)
-### [HOW TO VISUALIZE THIS DOCUMENT](#how-to-visualize-this-document)
+### [HOW TO VIEW THIS DOCUMENT](#how-to-view-this-document)
 
 ### <a name="test-and-build-the-application"></a> TEST & BUILD THE APPLICATION
 
@@ -19,7 +19,7 @@ JavaDoc generated documentation will be available in the following file:
 
      ./target/apidocs/index.html
 
-This application requires Maven 3 and Java 8 (due to the use of streams and method references).
+This application was developed using Maven 3 and Java 8 (due to the use of streams and method references).
 
 ### <a name="execute-the-jar-in-the-command-line"></a> EXECUTE THE JAR IN THE COMMAND LINE
 
@@ -31,20 +31,38 @@ Note that ```-i``` (or ```--input-file```) is mandatory. If ```-o``` (or ```--ou
 
 Examples:
 
-    java -jar ./target/paintshop-1.0-SNAPSHOT-jar-with-dependencies.jar 
-    -i ./src/test/resources/inputs/success_from_specification.txt
+    java -jar \
+    ./target/paintshop-1.0-SNAPSHOT-jar-with-dependencies.jar \
+    -i ./src/test/resources/inputs/success_from_specification.txt \
     
-    java -jar ./target/paintshop-1.0-SNAPSHOT-jar-with-dependencies.jar 
-    -i ./src/test/resources/inputs/performance/large_dataset.txt
+    java -jar \
+    ./target/paintshop-1.0-SNAPSHOT-jar-with-dependencies.jar \
+    -i ./src/test/resources/inputs/performance/large_dataset.txt \
     -o large_dataset_output.txt
     
-    java -jar ./target/paintshop-1.0-SNAPSHOT-jar-with-dependencies.jar 
-    -i ./src/test/resources/inputs/performance/small_dataset.txt
+    java -jar \
+    ./target/paintshop-1.0-SNAPSHOT-jar-with-dependencies.jar \
+    -i ./src/test/resources/inputs/performance/small_dataset.txt \
     -o small_dataset_output.txt
 
 For help execute the following command:
 
-    java -jar ./target/paintshop-1.0-SNAPSHOT-jar-with-dependencies.jar --help
+    java -jar \
+    ./target/paintshop-1.0-SNAPSHOT-jar-with-dependencies.jar --help
+
+Which will print the following:
+
+    Usage: java -jar <jar name> [options]
+      Options:
+        --help
+   
+           Default: false
+      * --input-file, -i
+           Name of the input file containing test cases.
+        --output-file, -o
+           Name of the output file. If not provided will print output to console.
+    
+    Help Invoked.
 
 ### <a name="on-the-design-choices"></a> ON THE DESIGN CHOICES
 
@@ -124,7 +142,7 @@ Could this application be simpler (less lines of code)? Yes. Would it be open-cl
 
 In order to achieve an open-closed design, the application has been broken into the following basic components:
 
-![Alt text](http://g.gravizo.com/g?
+![PaintShop Class Diagram](http://g.gravizo.com/g?
 /**
  * @has 1 assignedTo 1 InputParser
  */
@@ -218,10 +236,10 @@ Which will output the following:
 
 Examples:
 
-    ./input-generator.py 100 10 10 2 
+    ./input-generator.py 100 10 10 2 \
     --output-file ../../small_dataset.txt
     
-    ./input-generator.py 5 2000 2000 3 
+    ./input-generator.py 5 2000 2000 3 \
     --output-file ../../large_dataset.txt
 
 Every time you run it, even with the same parameters, you will get a different file.
@@ -232,7 +250,7 @@ For reference, the generated data sets used for my performance tests are availab
 
 ###### <a name="performance-results"></a> PERFORMANCE RESULTS
 
-Running on my computer, a Lenovo Yoga 2 laptop/tablet running Ubuntu 12.04, I got the following results:
+Running on my computer, a Lenovo Yoga 2 laptop running Ubuntu 12.04, I got the following results:
 
 Large data set:
 
@@ -254,9 +272,9 @@ Small data set:
     
     Total processing time: 5 ms
 
-### <a name="how-to-visualize-this-document"></a> HOW TO VISUALIZE THIS DOCUMENT
+### <a name="how-to-view-this-document"></a> HOW TO VIEW THIS DOCUMENT
 
-This document is better visualized using IntelliJ's Markdown Plugin. In case it isn't available, there is a PDF version of this document in the same directory.
+This document is better viewed using IntelliJ's Markdown Plugin. In case it isn't available, there is a PDF version of this document in the same directory.
 
 For my own reference, to convert markdown to PDF use the following command:
 

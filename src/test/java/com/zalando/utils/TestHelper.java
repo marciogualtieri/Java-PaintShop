@@ -3,6 +3,7 @@ package com.zalando.utils;
 import com.zalando.paintshop.Customer;
 import com.zalando.paintshop.TestCase;
 import com.zalando.paintshop.constants.FieldNames;
+import com.zalando.paintshop.iterators.InputIteratorLine;
 import org.apache.commons.io.FilenameUtils;
 
 import java.util.Arrays;
@@ -54,17 +55,21 @@ public class TestHelper {
     public static final String INPUT_FILE_DOES_NOT_EXIST_MESSAGE =
             String.format("File '%s' does not exist", NON_EXISTENT_FILE);
     public static final String NUMBER_TEST_CASES_NOT_A_NUMBER_MESSAGE =
-            notNumberErrorMessage(FieldNames.NUMBER_TEST_CASES, "X", 1);
+            notNumberErrorMessage(FieldNames.NUMBER_TEST_CASES, new InputIteratorLine("X", 1));
     public static final String NUMBER_COLORS_NOT_A_NUMBER_MESSAGE =
-            notNumberErrorMessage(FieldNames.NUMBER_COLORS, "X", 2);
+            notNumberErrorMessage(FieldNames.NUMBER_COLORS, new InputIteratorLine("X", 2));
     public static final String NUMBER_CUSTOMERS_NOT_A_NUMBER_MESSAGE =
-            notNumberErrorMessage(FieldNames.NUMBER_CUSTOMERS, "X", 3);
-    public static final String CUSTOMER_PAIRS_NOT_NUMBERS_MESSAGE = nonNumericPairsErrorMessage("2 1 0 X 0", 5);
-    public static final String INCORRECT_NUMBER_OF_PAIRS_MESSAGE = invalidNumberPairsErrorMessage("3 1 0 2 0", 5);
+            notNumberErrorMessage(FieldNames.NUMBER_CUSTOMERS, new InputIteratorLine("X", 3));
+    public static final String CUSTOMER_PAIRS_NOT_NUMBERS_MESSAGE =
+            nonNumericPairsErrorMessage(new InputIteratorLine("2 1 0 X 0", 5));
+    public static final String INCORRECT_NUMBER_OF_PAIRS_MESSAGE =
+            invalidNumberPairsErrorMessage(new InputIteratorLine("3 1 0 2 0", 5));
     public static final String CUSTOMER_WITH_MORE_THAN_ONE_MATTE_COLOR_MESSAGE =
-            moreThanOneMatteErrorMessage("2 1 1 2 1", 5);
-    public static final String INVALID_COLOR_INPUT_MESSAGE = invalidColorCodeErrorMessage(5, "1 6 1", 4);
-    public static final String INVALID_FINISH_INPUT_MESSAGE = invalidFinishCodeErrorMessage("1 1 3", 4);
+            moreThanOneMatteErrorMessage(new InputIteratorLine("2 1 1 2 1", 5));
+    public static final String INVALID_COLOR_INPUT_MESSAGE =
+            invalidColorCodeErrorMessage(5, new InputIteratorLine("1 6 1", 4));
+    public static final String INVALID_FINISH_INPUT_MESSAGE =
+            invalidFinishCodeErrorMessage(new InputIteratorLine("1 1 3", 4));
 
     private static BitSet createSecondColorOnlyMatteBatches() {
         BitSet set = new BitSet(NUMBER_COLORS);

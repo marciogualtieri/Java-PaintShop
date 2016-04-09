@@ -7,6 +7,7 @@ import com.zalando.paintshop.enums.Finish;
 import com.zalando.paintshop.exceptions.InputIteratorException;
 import com.zalando.paintshop.exceptions.InputParserException;
 import com.zalando.paintshop.iterators.InputIterator;
+import com.zalando.paintshop.iterators.InputIteratorLine;
 
 import java.util.Arrays;
 
@@ -57,14 +58,13 @@ public class PlainTextInputParser implements InputParser {
     private Customer parseCustomer(int numColors, InputIterator lines)
             throws InputParserException, InputIteratorException {
         Customer customer = new Customer(numColors);
-        String lineValue = lines.readLine();
-        int lineNum = lines.getLineNumber();
-        int[] pairs = parseCustomerPairs(lineValue, lineNum);
+        InputIteratorLine line = lines.readLine();
+        int[] pairs = parseCustomerPairs(line);
         for (int i = 1; i < pairs.length; i += 2) {
             int color = pairs[i];
             int finish = pairs[i + 1];
-            validateColorCode(color, numColors, lineValue, lineNum);
-            validateFinishCode(customer, finish, lineValue, lineNum);
+            validateColorCode(color, numColors, line);
+            validateFinishCode(customer, finish, line);
             updateCustomer(customer, color, finish);
         }
         return customer;
@@ -76,36 +76,36 @@ public class PlainTextInputParser implements InputParser {
         else customer.setMatte(colorCode - 1);
     }
 
-    private void validateColorCode(int colorCode, int numColors, String lineValue, int lineNum)
+    private void validateColorCode(int colorCode, int numColors, InputIteratorLine line)
             throws InputParserException {
         if (colorCode < 1 || colorCode > numColors)
-            throw new InputParserException(invalidColorCodeErrorMessage(numColors, lineValue, lineNum));
+            throw new InputParserException(invalidColorCodeErrorMessage(numColors, line));
     }
 
-    private void validateFinishCode(Customer customer, int finishCode, String lineValue, int lineNum)
+    private void validateFinishCode(Customer customer, int finishCode, InputIteratorLine line)
             throws InputParserException {
         if (Finish.isMatte(finishCode) && customer.hasMatte()) {
-            throw new InputParserException(moreThanOneMatteErrorMessage(lineValue, lineNum));
+            throw new InputParserException(moreThanOneMatteErrorMessage(line));
         }
         if (!Finish.isValidFinishCode(finishCode))
-            throw new InputParserException(invalidFinishCodeErrorMessage(lineValue, lineNum));
+            throw new InputParserException(invalidFinishCodeErrorMessage(line));
     }
 
-    private int[] parseCustomerPairs(String lineValue, int lineNum)
+    private int[] parseCustomerPairs(InputIteratorLine line)
             throws InputParserException, InputIteratorException {
         int[] pairs;
         try {
-            pairs = convertCustomerStringToIntArray(lineValue);
+            pairs = convertCustomerStringToIntArray(line.getValue());
         } catch (NumberFormatException e) {
-            throw new InputParserException(nonNumericPairsErrorMessage(lineValue, lineNum), e);
+            throw new InputParserException(nonNumericPairsErrorMessage(line), e);
         }
-        validateCustomerPairs(pairs, lineValue, lineNum);
+        validateCustomerPairs(pairs, line);
         return pairs;
     }
 
-    private void validateCustomerPairs(int[] pairs, String lineValue, int lineNum) throws InputParserException {
+    private void validateCustomerPairs(int[] pairs, InputIteratorLine line) throws InputParserException {
         if (pairs == null || !isValidNumCustomerPairs(pairs))
-            throw new InputParserException(invalidNumberPairsErrorMessage(lineValue, lineNum));
+            throw new InputParserException(invalidNumberPairsErrorMessage(line));
     }
 
     private boolean isValidNumCustomerPairs(int[] pairs) {
@@ -122,12 +122,11 @@ public class PlainTextInputParser implements InputParser {
 
     private int parseIntField(InputIterator lines, String fieldName)
             throws InputParserException, InputIteratorException {
-        String lineValue = lines.readLine();
-        int lineNum = lines.getLineNumber();
+        InputIteratorLine line = lines.readLine();
         try {
-            return Integer.parseInt(lineValue);
+            return Integer.parseInt(line.getValue());
         } catch (NumberFormatException e) {
-            throw new InputParserException(notNumberErrorMessage(fieldName, lineValue, lineNum), e);
+            throw new InputParserException(notNumberErrorMessage(fieldName, line), e);
         }
     }
 }

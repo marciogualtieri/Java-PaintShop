@@ -59,12 +59,12 @@ public class PaintShop {
 
     public static void main(String[] args) {
         try {
-            CliArgsConfig cliArgsConfig = buildCliArgsConfig(args);
-            String inputFileNameAndPath = cliArgsConfig.getInputFileNameAndPath();
+            CliConfig cliConfig = buildCliArgsConfig(args);
+            String inputFileNameAndPath = cliConfig.getInputFileNameAndPath();
             PaintShop paintShop = PaintShop.create();
             List<String> outputs = paintShop.execute(inputFileNameAndPath);
-            if (isOutputFileProvided(cliArgsConfig))
-                outputToFile(outputs, cliArgsConfig.getOutputFileNameAndPath());
+            if (isOutputFileProvided(cliConfig))
+                outputToFile(outputs, cliConfig.getOutputFileNameAndPath());
             else
                 outputToConsole(outputs);
         } catch (Exception e) {
@@ -72,18 +72,19 @@ public class PaintShop {
         }
     }
 
-    private static CliArgsConfig buildCliArgsConfig(String[] args) throws Exception {
-        CliArgsConfig cliArgsConfig = new CliArgsConfig();
-        JCommander jCommander = new JCommander(cliArgsConfig, args);
-        if (cliArgsConfig.getHelp()) {
+    private static CliConfig buildCliArgsConfig(String[] args) throws Exception {
+        CliConfig cliConfig = new CliConfig();
+        JCommander jCommander = new JCommander(cliConfig, args);
+        jCommander.setProgramName("java -jar <jar name>");
+        if (cliConfig.getHelp()) {
             jCommander.usage();
             throw new Exception("Help Invoked.");
         }
-        return cliArgsConfig;
+        return cliConfig;
     }
 
-    private static boolean isOutputFileProvided(CliArgsConfig cliArgsConfig) {
-        return cliArgsConfig.getOutputFileNameAndPath() != null;
+    private static boolean isOutputFileProvided(CliConfig cliConfig) {
+        return cliConfig.getOutputFileNameAndPath() != null;
     }
 
     private static void outputToConsole(List<String> outputs) {
