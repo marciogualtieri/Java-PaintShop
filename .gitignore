@@ -4,3 +4,4 @@
 *.pyc
 /*.txt
 /scripts/input-generator/*.txt
+/README.pdf
