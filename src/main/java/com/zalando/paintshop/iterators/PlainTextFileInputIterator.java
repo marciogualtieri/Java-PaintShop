@@ -1,7 +1,7 @@
 package com.zalando.paintshop.iterators;
 
-import com.zalando.paintshop.messages.ErrorMessages;
 import com.zalando.paintshop.exceptions.InputIteratorException;
+import com.zalando.paintshop.messages.ErrorMessages;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.mutable.MutableInt;
