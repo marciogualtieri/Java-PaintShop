@@ -34,37 +34,41 @@ public class PlainTextInputParser implements InputParser {
      */
     public TestCase[] parse(InputIterator lines) throws InputParserException, InputIteratorException {
         TestCase[] testCases;
-        int numTestCases = parseIntField(lines, FieldNames.NUMBER_TEST_CASES);
+        int numTestCases = parseIntFieldFromLines(FieldNames.NUMBER_TEST_CASES, lines);
         testCases = new TestCase[numTestCases];
         for (int i = 0; i < numTestCases; i++) {
-            int numColors = parseIntField(lines, FieldNames.NUMBER_COLORS);
-            int numCustomers = parseIntField(lines, FieldNames.NUMBER_CUSTOMERS);
-            Customer[] customers = parseCustomers(numCustomers, numColors, lines);
-            testCases[i] = new TestCase(numColors, customers);
+            testCases[i] = parseTestCase(lines);
         }
         return testCases;
     }
 
-    private Customer[] parseCustomers(int numCustomers, int numColors, InputIterator lines)
+    private TestCase parseTestCase(InputIterator lines) throws InputParserException, InputIteratorException {
+        int numColors = parseIntFieldFromLines(FieldNames.NUMBER_COLORS, lines);
+        int numCustomers = parseIntFieldFromLines(FieldNames.NUMBER_CUSTOMERS, lines);
+        Customer[] customers = parseCustomersFromLines(numCustomers, numColors, lines);
+        return new TestCase(numColors, customers);
+    }
+
+    private Customer[] parseCustomersFromLines(int numCustomers, int numColors, InputIterator lines)
             throws InputParserException, InputIteratorException {
         Customer[] customers = new Customer[numCustomers];
         for (int i = 0; i < numCustomers; i++) {
-            Customer customer = parseCustomer(numColors, lines);
+            Customer customer = parseCustomerFromLines(numColors, lines);
             customers[i] = customer;
         }
         return customers;
     }
 
-    private Customer parseCustomer(int numColors, InputIterator lines)
+    private Customer parseCustomerFromLines(int numColors, InputIterator lines)
             throws InputParserException, InputIteratorException {
         Customer customer = new Customer(numColors);
         InputIteratorLine line = lines.readLine();
-        int[] pairs = parseCustomerPairs(line);
+        int[] pairs = parseCustomerPairsFromLine(line);
         for (int i = 1; i < pairs.length; i += 2) {
             int color = pairs[i];
             int finish = pairs[i + 1];
             validateColorCode(color, numColors, line);
-            validateFinishCode(customer, finish, line);
+            validateFinishCode(finish, customer, line);
             updateCustomer(customer, color, finish);
         }
         return customer;
@@ -82,7 +86,7 @@ public class PlainTextInputParser implements InputParser {
             throw new InputParserException(invalidColorCodeErrorMessage(numColors, line));
     }
 
-    private void validateFinishCode(Customer customer, int finishCode, InputIteratorLine line)
+    private void validateFinishCode(int finishCode, Customer customer, InputIteratorLine line)
             throws InputParserException {
         if (Finish.isMatte(finishCode) && customer.hasMatte()) {
             throw new InputParserException(moreThanOneMatteErrorMessage(line));
@@ -91,7 +95,7 @@ public class PlainTextInputParser implements InputParser {
             throw new InputParserException(invalidFinishCodeErrorMessage(line));
     }
 
-    private int[] parseCustomerPairs(InputIteratorLine line)
+    private int[] parseCustomerPairsFromLine(InputIteratorLine line)
             throws InputParserException, InputIteratorException {
         int[] pairs;
         try {
@@ -120,7 +124,7 @@ public class PlainTextInputParser implements InputParser {
                 .toArray();
     }
 
-    private int parseIntField(InputIterator lines, String fieldName)
+    private int parseIntFieldFromLines(String fieldName, InputIterator lines)
             throws InputParserException, InputIteratorException {
         InputIteratorLine line = lines.readLine();
         try {
