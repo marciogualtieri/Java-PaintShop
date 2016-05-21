@@ -32,4 +32,6 @@ class CliConfig {
         return this.outputFileNameAndPath;
     }
 
+
+
 }

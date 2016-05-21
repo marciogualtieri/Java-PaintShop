@@ -1,4 +1,4 @@
-package com.zalando.paintshop.constants;
+package com.zalando.paintshop.messages;
 
 import com.zalando.paintshop.iterators.InputIteratorLine;
 

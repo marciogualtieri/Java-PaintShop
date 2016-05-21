@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
-import static com.zalando.paintshop.constants.ErrorMessages.*;
+import static com.zalando.paintshop.messages.ErrorMessages.*;
 
 public class TestHelper {
 

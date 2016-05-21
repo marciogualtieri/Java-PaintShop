@@ -11,7 +11,7 @@ import com.zalando.paintshop.iterators.InputIteratorLine;
 
 import java.util.Arrays;
 
-import static com.zalando.paintshop.constants.ErrorMessages.*;
+import static com.zalando.paintshop.messages.ErrorMessages.*;
 
 /**
  * Parses plain text input into test cases.
