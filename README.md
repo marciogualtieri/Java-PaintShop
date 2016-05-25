@@ -197,10 +197,15 @@ To be able to check performance, we need to create the "large data set" and "sma
 
 A Python script is available under ```scripts/input-generator``` for that. Refer to the source code for details. Note that this Python code has automated tests.
 
-To run unit tests, simply execute its components as follows:
+To run unit tests run the following command:
 
-    ./scripts/input-generator/test_case.py
-    ./scripts/input-generator/customer.py
+    nosetests -vv tests
+
+
+You might need to install unittest and nose:
+
+    sudo pip install unittest2
+    sudo pip install nose
 
 All customers are generated at random (colors, finishes, as well as number of pairs for each customer), but all test cases have the same number of customers.
 
@@ -274,7 +279,7 @@ Small data set:
 
 ### <a name="how-to-view-this-document"></a> HOW TO VIEW THIS DOCUMENT
 
-This document is better viewed using IntelliJ's Markdown Plugin. In case it isn't available, there is a PDF version of this document in the same directory.
+This document is better viewed using IntelliJ's GFM Plugin. In case it isn't available, there is a PDF version of this document in the same directory.
 
 For my own reference, to convert markdown to PDF use the following command:
 
