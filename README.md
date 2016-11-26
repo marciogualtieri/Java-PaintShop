@@ -199,7 +199,7 @@ A Python script is available under ```scripts/input-generator``` for that. Refer
 
 To run unit tests run the following command:
 
-    nosetests -vv tests
+    nosetests -vv --nocapture tests
 
 
 You might need to install unittest and nose:
