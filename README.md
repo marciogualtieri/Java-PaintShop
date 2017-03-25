@@ -142,7 +142,11 @@ Could this application be simpler (less lines of code)? Yes. Would it be open-cl
 
 In order to achieve an open-closed design, the application has been broken into the following basic components:
 
-![PaintShop Class Diagram](http://g.gravizo.com/g?
+
+![](https://g.gravizo.com/source/svg/custom_mark1?https%3A%2F%2Fraw.githubusercontent.com%2Fmarciogualtieri%2FJava-Paintshop%2Fmaster%2FREADME.md)
+
+<!---
+custom_mark1
   interface InputIterator {}
     /**
      * @has 1 assignedTo 1 InputIterator
@@ -159,7 +163,8 @@ In order to achieve an open-closed design, the application has been broken into 
      * @composed 1 Has 1 OutputFormatter
      */
     class PaintShop {}
-    )
+custom_mark1
+-->
 
 ```PaintShop``` uses ```InputParser```, ```TestCaseProcessor``` and ```OutputFormatter``` to perform the task of iterating through the input, parsing the input, processing the test cases and outputting the batches solutions respectively.
 
